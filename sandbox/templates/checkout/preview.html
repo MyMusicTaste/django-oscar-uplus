@@ -1,0 +1,80 @@
+{% extends "checkout/checkout.html" %}
+{% load i18n %}
+{% load currency_filters %}
+{% load url from future %}
+
+{% block title %}
+    {% trans "Order preview" %} | {{ block.super }}
+{% endblock %}
+
+{% block checkout_nav %}
+    {% include 'checkout/nav.html' with step=4 %}
+{% endblock %}
+
+{% block checkout_title %}
+    {% trans "Preview order" %}
+{% endblock %}
+
+{% block place_order %}
+    <form method="post" name="LGD_PAYINFO" id="LGD_PAYINFO" action=""> {% csrf_token %}
+        {% for hidden in auth_form.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        <div>
+            {% for field in auth_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+            <div class="clearfix"></div>
+            {% endfor %}
+        </div>
+        <div id="transcation">
+            <div class="form-actions clearfix">
+                <div class="row-fluid">
+                    <div class="span3 offset9">
+                         <button id='place-order' type="submit" class="btn btn-primary btn-large btn-block js-disable-on-click" data-loading-text="{% trans 'Submitting...' %}">{% trans "Place order" %}</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+{% endblock place_order %}
+
+{% block payment_method %}
+    <div class="span6">
+    <div class="sub-header">
+        <h2>{% trans "Payment" %}</h2>
+    </div>
+    <div class="well well-success">
+        <p>결제금액: <strong>{{ order_total.incl_tax|currency }}</strong></p>
+        <p>결제방법: <strong>{{ paytype }}</strong></p>
+        <div class="alert-actions">
+            <a href="{% url 'checkout:payment-details' %}" class="btn">{% trans "Change payment details" %}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script language="javascript" src="https://xpay.uplus.co.kr/xpay/js/xpay_crossplatform.js" type="text/javascript"></script>
+<script type="text/javascript">
+var LGD_window_type = "submit"; //iframe
+var cashreceipt = 'N';
+
+function launchCrossPlatform(){
+    lgdwin = open_paymentwindow(document.getElementById('LGD_PAYINFO'), {% if test %}'test'{% else %} 'service'{% endif %}, LGD_window_type);
+}
+
+function getFormObject() {
+    return document.getElementById("LGD_PAYINFO");
+}
+
+$("button#place-order").click(function(event) {
+    event.preventDefault();
+    launchCrossPlatform();
+});
+
+</script>
+
+{% endblock %}
