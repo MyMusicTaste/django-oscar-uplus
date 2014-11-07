@@ -12,6 +12,8 @@ class UplusTransaction(models.Model):
         ('C', "Cancel"), # 구매 취소
         ('P', "Paid"),    #구매완료
         ('F', "Fail"),    #에러
+        #CAS
+        ('R', "CAS requested"), #가상계좌 만들어짐
 
     )
 
@@ -31,6 +33,13 @@ class UplusTransaction(models.Model):
     cashreceipt = models.BooleanField(default=True)
     error_message = models.CharField(max_length=128, blank=True)
     error_code = models.CharField(max_length=32, blank=True)
+    #CAS
+    amount_added = models.IntegerField(default=0, null=True, blank=True) #가상계좌 현금입고 balance
+    cas_accountnum = models.CharField(max_length=64, blank=True)
+    cas_log = models.CharField(max_length=512, blank=True)
+    cas_payer = models.CharField(max_length=32, blank=True)
+    cashreceipt_no = models.CharField(max_length=64, blank=True)
+    cashreceipt_self = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'uplus'

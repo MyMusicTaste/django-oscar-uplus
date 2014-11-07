@@ -96,13 +96,8 @@ class PaymentDetailsView(views.PaymentDetailsView):
 
         #create or get uplus transaction for basket id
         timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-        if self.basket.is_recipe:
-            method = Repository().get_recipe_shipping_method(self.basket)
-            amount = int(RecipeOrderTotalCalculator().calculate(
-                self.request.basket, method).incl_tax)
-        else:
-            amount = int(basket.total_incl_tax)
-        # basket.freeze()
+        shipping_price = Repository().get_shipping_methods(self.request.user, self.basket)[0]
+        amount = int(basket.total_incl_tax) + shipping_price.charge_incl_tax
 
         try:
             transaction = UplusTransaction.objects.create(
@@ -130,9 +125,9 @@ class PaymentDetailsView(views.PaymentDetailsView):
                'LGD_CUSTOM_PROCESSTYPE':'TWOTR',
                'LGD_HASHDATA':hash,
                'LGD_TIMESTAMP':timestamp,
-               'LGD_CEONAME': 'Jaeseok Lee',
-               'LGD_MERTNAME': "MyMusicTaste",
-               'LGD_CUSTOM_LOGO':"http://media.mironi.pl/img/21_height.png",
+               'LGD_CEONAME': '',
+               'LGD_MERTNAME': "",
+               'LGD_CUSTOM_LOGO':"",
                'LGD_ENCODING':"UTF-8",
                'LGD_ENCODING_NOTEURL':"UTF-8",
                'LGD_ENCODING_RETURNURL':"UTF-8",
@@ -151,10 +146,13 @@ class PaymentDetailsView(views.PaymentDetailsView):
                'LGD_MTRANSFERWAPURL':config_uplus.UPLUS_ISPCANCEL_URL+str(transaction.id),
                'LGD_MTRANSFERNOTEURL':config_uplus.UPLUS_ISPNOTE_URL,
                'LGD_CASHRECEIPTYN':'Y',
-               'LGD_CUSTOM_MERTNAME':'(주)제이제이에스미디어',
-               'LGD_CUSTOM_MERTPHONE':'070-8616-6442',
-               'LGD_CUSTOM_BUSINESSNUM':'220-88-29856',
-               'LGD_CUSTOM_CEONAME':'이재석',
+               'LGD_CUSTOM_MERTNAME':'',
+               'LGD_CUSTOM_MERTPHONE':'',
+               'LGD_CUSTOM_BUSINESSNUM':'',
+               'LGD_CUSTOM_CEONAME':'',
+               'LGD_CUSTOM_CASSMSMSG':'',
+               'LGD_CASNOTEURL':'http://'+request.META['HTTP_HOST'] + config_uplus.LGD_CASNOTEURL,
+
                })
         return self.render_preview(request,
                                    paytype_form=paytype_form,

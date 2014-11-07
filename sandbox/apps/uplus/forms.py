@@ -10,6 +10,8 @@ class UplusPayTypeForm(forms.Form):
     UPLUS_PAY_TYPE = (
         ('SC0010', _("Credit Card")), #신용카드
         ('SC0030', _("Transfer Cash")), #계좌이체
+        ('SC0040', "무통장입금"), #무통장
+
         ('SC0060', _("Cell Phone")), #휴대폰
     )
     paytype = forms.ChoiceField(choices=UPLUS_PAY_TYPE,
@@ -250,6 +252,18 @@ class UplusAuthBaseForm(forms.Form):
         label ="LGD_CUSTOM_CEONAME",
         widget = forms.HiddenInput(),
         initial='이재석'
+    )
+
+    ###########################################
+    #CAS
+    LGD_CUSTOM_CASSMSMSG = forms.CharField(
+        label ="LGD_CUSTOM_CASSMSMSG",
+        widget = forms.HiddenInput(),
+    )
+
+    LGD_CASNOTEURL = forms.CharField(
+        label ="LGD_CASNOTEURL",
+        widget = forms.HiddenInput(),
     )
 
 User = get_user_model()

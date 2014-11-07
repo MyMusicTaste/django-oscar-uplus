@@ -23,12 +23,14 @@ test_url = 'https://xpayclient.lgdacom.net:7443/xpay/Gateway.do'
 aux_url = 'http://xpayclient.lgdacom.net:7080/xpay/Gateway.do'
 
 if LGUPLUS_TEST:
-    UPLUS_RETURN_URL = ""
-    UPLUS_ISPWAP_URL = ""
-    UPLUS_ISPCANCEL_URL = ""
-    UPLUS_ISPNOTE_URL = ""
+    UPLUS_RETURN_URL = "/payment/uplus/return"
+    UPLUS_ISPWAP_URL = "/payment/uplus/isp/return"
+    UPLUS_ISPCANCEL_URL = "/payment/uplus/isp/cancel"
+    UPLUS_ISPNOTE_URL = "/payment/uplus/isp/note"
+    LGD_CASNOTEURL = "/payment/uplus/cas/return"
 else:
-    UPLUS_RETURN_URL = ""
-    UPLUS_ISPWAP_URL = ""
-    UPLUS_ISPCANCEL_URL = ""
-    UPLUS_ISPNOTE_URL = ""
+    UPLUS_RETURN_URL = "/payment/uplus/return"
+    UPLUS_ISPWAP_URL = "/payment/uplus/isp/return"
+    UPLUS_ISPCANCEL_URL = "/payment/uplus/isp/cancel"
+    UPLUS_ISPNOTE_URL = "/payment/uplus/isp/note"
+    LGD_CASNOTEURL = "/payment/uplus/cas/return"
