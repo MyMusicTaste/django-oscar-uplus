@@ -2,8 +2,46 @@
 <html>
 <head>
     <title></title>
+
 </head>
 <body>
+        <script type="text/javascript">
+            document.domain = "{{ request.META.HTTP_HOST }}";
+            var params = {};
+            {% if code == '0000' %}
+                params['code'] =  "{{code}}";
+                params['oid'] =  "{{oid}}";
+                params['hash_data'] =  "{{hash_data}}";
+                params['amount'] =  "{{amount}}";
+                params['timestamp'] =  "{{timestamp}}";
+                params['LGD_RESPMSG'] =  "{{message}}";
+                params['LGD_PAYTYPE'] =  "{{LGD_PAYTYPE}}";
+                params['LGD_PAYKEY'] =  "{{LGD_PAYKEY}}";
+                params['LGD_FINANCEAUTHNUM'] =  "{{LGD_FINANCEAUTHNUM}}";
+            {% else %}
+                alert("{{message}}");
+                params['code'] =  "{{code}}";
+                params['oid'] =  "{{oid}}";
+                params['LGD_RESPMSG'] = "{{message}}";
+                params['hash_data'] =  "";
+                params['amount'] =  "";
+                params['timestamp'] =  "";
+                params['LGD_PAYTYPE'] =  "";
+                params['LGD_PAYKEY'] =  "";
+                params['LGD_FINANCEAUTHNUM'] =  "";
 
+            {% endif %}
+            try {
+                window.opener.HandlePopupResult(params);
+
+            }
+            catch (err) {
+                alert(err);
+
+            }
+
+            window.close();
+
+        </script>
 </body>
 </html>

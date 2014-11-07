@@ -63,7 +63,8 @@ var LGD_window_type = "submit"; //iframe
 var cashreceipt = 'N';
 
 function launchCrossPlatform(){
-    lgdwin = open_paymentwindow(document.getElementById('LGD_PAYINFO'), {% if test %}'test'{% else %} 'service'{% endif %}, LGD_window_type);
+      document.domain = "{{ request.META.HTTP_HOST }}";
+      lgdwin = open_paymentwindow(document.getElementById('LGD_PAYINFO'), {% if test %}'test'{% else %} 'service'{% endif %});
 }
 
 function getFormObject() {
@@ -75,6 +76,65 @@ $("button#place-order").click(function(event) {
     launchCrossPlatform();
 });
 
+
+window.HandlePopupResult  = function(params) {
+//    console.log("received data");
+
+    var form = document.createElement("form");
+    var element1 = document.createElement("input");
+    var element2 = document.createElement("input");
+    var element3 = document.createElement("input");
+    var element4 = document.createElement("input");
+    var element5 = document.createElement("input");
+    var element6 = document.createElement("input");
+    var element7 = document.createElement("input");
+    var element8 = document.createElement("input");
+    var element9 = document.createElement("input");
+
+    form.method = "POST";
+    form.action = "{% url 'uplus-return' %}";
+
+    element1.value=params['code'];
+    element1.name="LGD_RESPCODE";
+    form.appendChild(element1);
+
+    element2.value=params['oid'];
+    element2.name="LGD_OID";
+    form.appendChild(element2);
+
+    element3.value=params['hash_data'];
+    element3.name="LGD_HASHDATA";
+    form.appendChild(element3);
+
+    element4.value=params['amount'];
+    element4.name="LGD_AMOUNT";
+    form.appendChild(element4);
+
+    element5.value=params['timestamp'];
+    element5.name="LGD_TIMESTAMP";
+    form.appendChild(element5);
+
+    element6.value=params['message'];
+    element6.name="LGD_RESPMSG";
+    form.appendChild(element6);
+
+    element7.value=params['LGD_FINANCEAUTHNUM'];
+    element7.name="LGD_FINANCEAUTHNUM";
+    form.appendChild(element7);
+
+    element8.value=params['LGD_PAYTYPE'];
+    element8.name="LGD_PAYTYPE";
+    form.appendChild(element8);
+
+    element9.value=params['LGD_PAYKEY'];
+    element9.name="LGD_PAYKEY";
+    form.appendChild(element9);
+
+
+    document.body.appendChild(form);
+
+    form.submit();
+}
 </script>
 
 {% endblock %}
